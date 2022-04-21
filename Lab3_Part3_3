@@ -1,0 +1,65 @@
+#if CONFIG_FREERTOS_UNICORE
+static const BaseType_t app_cpu = 0
+#else
+static const BaseType_t app_cpu = 1;
+#endif
+
+static const int led_pin3 = 3;
+static const int led_pin4 = 4;
+
+void toggleLED_500ms(void *parameter){
+  while(1){
+    digitalWrite(led_pin3, HIGH);
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+    digitalWrite(led_pin3, LOW);
+    vTaskDelay(500 / portTICK_PERIOD_MS); //vTaskDelay expects the number of ticks to delay
+
+    digitalWrite(led_pin4, HIGH);
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+    digitalWrite(led_pin4, LOW);
+    vTaskDelay(500 / portTICK_PERIOD_MS); //vTaskDelay expects the number of ticks to delay
+  }
+}
+
+void toggleLED_300ms(void *parameter){
+  while(1){
+    digitalWrite(led_pin3, HIGH);
+    vTaskDelay(300 / portTICK_PERIOD_MS);
+    digitalWrite(led_pin3, LOW);
+    vTaskDelay(300 / portTICK_PERIOD_MS); //vTaskDelay expects the number of ticks to delay
+
+    digitalWrite(led_pin4, HIGH);
+    vTaskDelay(300 / portTICK_PERIOD_MS);
+    digitalWrite(led_pin4, LOW);
+    vTaskDelay(300 / portTICK_PERIOD_MS); //vTaskDelay expects the number of ticks to delay
+  }
+}
+
+void setup() {
+  pinMode(led_pin, OUTPUT);
+
+  xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+             toggleLED_500ms, 
+             "Toggle LED_500ms", 
+             1024, //Stack Size
+             NULL, //Parameter to pass to the function
+             1, //Task Priority
+             NULL, //Task Handle or Pointer to check status memory usage and end if necessary
+             app_cpu); //Run on CPU Core 1
+}
+
+xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+             toggleLED_300ms, 
+             "Toggle LED_300ms", 
+             1024, //Stack Size
+             NULL, //Parameter to pass to the function
+             1, //Task Priority
+             NULL, //Task Handle or Pointer to check status memory usage and end if necessary
+             app_cpu); //Run on CPU Core 1
+}
+
+
+void loop() {
+
+
+}
