@@ -35,7 +35,6 @@ void setup() {
              1, //Task Priority
              NULL, //Task Handle or Pointer to check status memory usage and end if necessary
              app_cpu); //Run on CPU Core 1
-}
 
 xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
              toggleLED_300ms, 
