@@ -38,23 +38,23 @@ void setup() {
   vTaskDelay(1000 / portTICK_PERIOD_MS);
 
   
-  xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+  xTaskCreatePinnedToCore(
              get_Serial_Input, 
              "Get Serial Input", 
-             1024, //Stack Size
-             NULL, //Parameter to pass to the function
-             1, //Task Priority
-             NULL, //Task Handle or Pointer to check status memory usage and end if necessary
-             0); //Run on CPU Core 0
+             1024, 
+             NULL, 
+             1, 
+             NULL, 
+             app_cpu); 
              
-  xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+  xTaskCreatePinnedToCore(
              Blink_LED, 
              "Blink LED", 
-             1024, //Stack Size
-             NULL, //Parameter to pass to the function
-             1, //Task Priority
-             NULL, //Task Handle or Pointer to check status memory usage and end if necessary
-             1); //Run on CPU Core 1
+             1024, 
+             NULL, 
+             1, 
+             NULL,
+             app_cpu); 
 }
 
 void loop() {
