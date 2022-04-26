@@ -31,8 +31,8 @@ void toggleLED_300ms(void *parameter){
 }
 
 void setup() {
-  pinMode(led_pin3, OUTPUT);
   pinMode(led_pin4, OUTPUT);
+  pinMode(led_pin5, OUTPUT);
 
   xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
              toggleLED_500ms, 
