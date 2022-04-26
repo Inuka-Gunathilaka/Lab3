@@ -9,7 +9,7 @@ void TaskA(void *parameter){
   while(1){
     Serial.println();
     Serial.print("I am Task A I am Running on CORE_");
-    Serial.print(xPortGetCoreID());
+    Serial.print(core);
   }
 }
 
@@ -17,17 +17,15 @@ void TaskB(void *parameter){
   int core = xPortGetCoreID();
   while(1){
     Serial.println();
-    Serial.print("I am Task A I am Running on CORE_");
-    Serial.print(xPortGetCoreID()); 
+    Serial.print("I am Task B I am Running on CORE_");
+    Serial.print(core); 
   }
 }
 
 void setup() {
-  vTaskDelay(1000 / portTICK_PERIOD_MS);
   Serial.begin(9600);
-  Serial.println();
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
  
-
   xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
              TaskA,
              "Task A", 
