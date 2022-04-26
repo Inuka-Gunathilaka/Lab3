@@ -1,0 +1,57 @@
+#if CONFIG_FREERTOS_UNICORE
+static const BaseType_t app_cpu = 0;
+#else
+static const BaseType_t app_cpu = 1;
+#endif
+
+const char msg[] = "";
+
+static TaskHandle_t task_1 = NULL;
+static TaskHandle_t task_2 = NULL;
+
+void startTask1(void *parameter){
+  int msg_len = strlen(msg);
+
+  while(1){
+    Serial.println();
+    for(int i=0; i<msg_len; i++){
+      Serial.print(msg[i]);
+    }
+    Serial.println();
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+  }
+}
+
+void startTask2(void *parameter){
+  while(1){
+    Serial.print('*');
+    vTaskDelay(100 / portTICK_PERIOD_MS);
+  }
+}
+
+void setup() {
+ 
+ xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+             startTask1, 
+             "Start Task 1", 
+             1024, //Stack Size
+             NULL, //Parameter to pass to the function
+             0, //Task Priority
+             NULL, //Task Handle or Pointer to check status memory usage and end if necessary
+             app_cpu); //Run on CPU Core 1
+
+  xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+             startTask2, 
+             "Start Task 1", 
+             1024, //Stack Size
+             NULL, //Parameter to pass to the function
+             1, //Task Priority
+             NULL, //Task Handle or Pointer to check status memory usage and end if necessary
+             app_cpu); //Run on CPU Core 1
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+}
