@@ -7,7 +7,7 @@ static const BaseType_t app_cpu = 1;
 static const int built_in_led = 2;
 int toggle_delay = 0;
 
-void get_Serial_Input(){
+void get_Serial_Input(void *parameters){
   int delay_var;
   while(1){
     if(Serial.available() > 0){
@@ -21,7 +21,7 @@ void get_Serial_Input(){
   
 }
 
-void Blink_LED(){
+void Blink_LED(void *parameters){
   while(1){
     digitalWrite(built_in_led, HIGH);
     vTaskDelay(toggle_delay / portTICK_PERIOD_MS);
