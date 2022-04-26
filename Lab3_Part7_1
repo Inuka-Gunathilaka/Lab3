@@ -1,0 +1,54 @@
+#if CONFIG_FREERTOS_UNICORE
+static const BaseType_t app_cpu = 0
+#else
+static const BaseType_t app_cpu = 1;
+#endif
+
+void TaskA(void *parameter){
+  int core = xPortGetCoreID();
+  while(1){
+    Serial.println();
+    Serial.print("I am Task A I am Running on CORE_");
+    Serial.print(xPortGetCoreID());
+  }
+}
+
+void TaskB(void *parameter){
+  int core = xPortGetCoreID();
+  while(1){
+    Serial.println();
+    Serial.print("I am Task A I am Running on CORE_");
+    Serial.print(xPortGetCoreID()); 
+  }
+}
+
+void setup() {
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
+  Serial.begin(9600);
+  Serial.println();
+ 
+
+  xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+             TaskA,
+             "Task A", 
+             1024, 
+             NULL, 
+             1, 
+             NULL, 
+             0); 
+
+
+  xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+             TaskB,
+             "Task B", 
+             1024, 
+             NULL, 
+             1, 
+             NULL, 
+             1); 
+}
+
+
+void loop() {
+
+}
