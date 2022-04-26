@@ -4,34 +4,29 @@ static const BaseType_t app_cpu = 0
 static const BaseType_t app_cpu = 1;
 #endif
 
-static const int led_pin3 = 3;
 static const int led_pin4 = 4;
+static const int led_pin5 = 5;
 
 void toggleLED_500ms(void *parameter){
   while(1){
-    digitalWrite(led_pin3, HIGH);
-    vTaskDelay(500 / portTICK_PERIOD_MS);
-    digitalWrite(led_pin3, LOW);
-    vTaskDelay(500 / portTICK_PERIOD_MS); //vTaskDelay expects the number of ticks to delay
-
     digitalWrite(led_pin4, HIGH);
+    digitalWrite(led_pin5, HIGH);
     vTaskDelay(500 / portTICK_PERIOD_MS);
     digitalWrite(led_pin4, LOW);
+    digitalWrite(led_pin5, LOW);
     vTaskDelay(500 / portTICK_PERIOD_MS); //vTaskDelay expects the number of ticks to delay
   }
 }
 
 void toggleLED_300ms(void *parameter){
   while(1){
-    digitalWrite(led_pin3, HIGH);
-    vTaskDelay(300 / portTICK_PERIOD_MS);
-    digitalWrite(led_pin3, LOW);
-    vTaskDelay(300 / portTICK_PERIOD_MS); //vTaskDelay expects the number of ticks to delay
-
     digitalWrite(led_pin4, HIGH);
+    digitalWrite(led_pin5, HIGH);
     vTaskDelay(300 / portTICK_PERIOD_MS);
     digitalWrite(led_pin4, LOW);
+    digitalWrite(led_pin5, LOW);
     vTaskDelay(300 / portTICK_PERIOD_MS); //vTaskDelay expects the number of ticks to delay
+    
   }
 }
 
