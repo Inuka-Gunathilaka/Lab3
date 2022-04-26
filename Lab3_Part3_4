@@ -5,11 +5,18 @@ static const BaseType_t app_cpu = 1;
 #endif
 
 static const int built_in_led = 2;
-unsigned int toggle_delay = 0;
+int toggle_delay = 0;
 
 void get_Serial_Input(){
+  int delay_var;
   while(1){
-    toggle_delay = Serial.read();
+    if(Serial.available() > 0){
+      delay_var = Serial.parseInt();
+      if(delay_var != 0){
+        toggle_delay = delay_var;
+      }
+      Serial.println(toggle_delay);
+    }
   }
   
 }
@@ -17,15 +24,18 @@ void get_Serial_Input(){
 void Blink_LED(){
   while(1){
     digitalWrite(built_in_led, HIGH);
-    delay(toggle_delay);
+    vTaskDelay(toggle_delay / portTICK_PERIOD_MS);
     digitalWrite(built_in_led, LOW);
-    delay(toggle_delay);
+    vTaskDelay(toggle_delay / portTICK_PERIOD_MS);
   }
  
 }
 
 void setup() {
+  Serial.begin(115200);
+  Serial.println("Enter Delay Input");
   pinMode(built_in_led, OUTPUT);
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
 
   
   xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
@@ -35,7 +45,7 @@ void setup() {
              NULL, //Parameter to pass to the function
              1, //Task Priority
              NULL, //Task Handle or Pointer to check status memory usage and end if necessary
-             0); //Run on CPU Core 1
+             0); //Run on CPU Core 0
              
   xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
              Blink_LED, 
