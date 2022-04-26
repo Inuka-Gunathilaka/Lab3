@@ -43,7 +43,7 @@ xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
              NULL, //Parameter to pass to the function
              1, //Task Priority
              NULL, //Task Handle or Pointer to check status memory usage and end if necessary
-             1); //Run on CPU Core 1
+             0); //Run on CPU Core 1
 }
 
 
