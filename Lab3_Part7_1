@@ -26,7 +26,7 @@ void setup() {
   Serial.begin(9600);
   vTaskDelay(1000 / portTICK_PERIOD_MS);
  
-  xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+  xTaskCreatePinnedToCore(
              TaskA,
              "Task A", 
              1024, 
@@ -36,7 +36,7 @@ void setup() {
              0); 
 
 
-  xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+  xTaskCreatePinnedToCore(
              TaskB,
              "Task B", 
              1024, 
