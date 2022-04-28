@@ -11,21 +11,21 @@ void toggleLED_500ms(void *parameter){
     digitalWrite(led_pin, HIGH);
     vTaskDelay(500 / portTICK_PERIOD_MS);
     digitalWrite(led_pin, LOW);
-    vTaskDelay(500 / portTICK_PERIOD_MS); //vTaskDelay expects the number of ticks to delay
+    vTaskDelay(500 / portTICK_PERIOD_MS);
   }
 }
 
 void setup() {
   pinMode(led_pin, OUTPUT);
 
-  xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+  xTaskCreatePinnedToCore(
              toggleLED_500ms, 
              "Toggle LED_500ms", 
-             1024, //Stack Size
-             NULL, //Parameter to pass to the function
-             1, //Task Priority
-             NULL, //Task Handle or Pointer to check status memory usage and end if necessary
-             0); //Run on CPU Core 0
+             1024, 
+             NULL,
+             1, 
+             NULL, 
+             0); 
 }
 
 
