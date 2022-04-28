@@ -25,7 +25,7 @@ void setup(){
 
   xTaskCreatePinnedToCore(testTask,
               "Test Task",
-              1024,
+              5024,
               NULL,
               1,
               NULL,
