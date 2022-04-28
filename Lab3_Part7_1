@@ -17,7 +17,7 @@ void TaskB(void *parameter){
   int core = xPortGetCoreID();
   while(1){
     Serial.println();
-    Serial.print("I am Task B I am Running on CORE_");
+    Serial.print("I am Task A I am Running on CORE_");
     Serial.print(core); 
   }
 }
