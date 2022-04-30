@@ -31,23 +31,23 @@ void startTask2(void *parameter){
 
 void setup() {
  
- xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+ xTaskCreatePinnedToCore(
              startTask1, 
              "Start Task 1", 
-             1024, //Stack Size
-             NULL, //Parameter to pass to the function
-             0, //Task Priority
-             NULL, //Task Handle or Pointer to check status memory usage and end if necessary
-             app_cpu); //Run on CPU Core 1
+             1024, 
+             NULL, 
+             0, 
+             NULL, 
+             app_cpu); 
 
-  xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
+  xTaskCreatePinnedToCore(
              startTask2, 
              "Start Task 2", 
-             1024, //Stack Size
-             NULL, //Parameter to pass to the function
-             1, //Task Priority
-             NULL, //Task Handle or Pointer to check status memory usage and end if necessary
-             app_cpu); //Run on CPU Core 1
+             1024, 
+             NULL, 
+             1, 
+             NULL, 
+             app_cpu); 
 
 }
 
