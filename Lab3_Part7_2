@@ -1,1 +1,113 @@
+#include <WiFi.h>
 
+#if CONFIG_FREERTOS_UNICORE
+static const BaseType_t app_cpu = 0;
+#else
+static const BaseType_t app_cpu = 1;
+#endif
+
+const int LED1 = 2;
+const int LED2 = 3;
+
+const char* ssid     = "Redmi9T";
+const char* password = "Kaveen@1";
+WiFiServer server(80);
+
+void Connect_WIFI(void *parameters){
+    Serial.println();
+    Serial.println();
+    Serial.print("Connecting to ");
+    Serial.println(ssid);
+
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println("");
+    Serial.println("WiFi connected.");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+    
+    server.begin(); 
+}
+
+void Control_LED(void *parameters){
+  WiFiClient client = server.available();   
+
+  if (client) {                          
+    Serial.println("New Client.");           
+    String currentLine = "";               
+    while (client.connected()) {            
+      if (client.available()) {             
+        char c = client.read();             
+        Serial.write(c);                 
+        if (c == '\n') {                    
+          if (currentLine.length() == 0) {
+            client.println("HTTP/1.1 200 OK");
+            client.println("Content-type:text/html");
+            client.println();
+            client.print("TURN ON LED 1 <a href=\"/LED1_ON\">here</a> <br>");
+            client.print("TURN OFF LED 1<a href=\"/LED1_OFF\">here</a> <br>");
+
+            client.print("TURN ON LED 2 <a href=\"/LED2_ON\"></a> <br>");
+            client.print("TURN OFF LED 2 <a href=\"/LED2_OFF\"></a> <br>");
+            
+            client.println();
+            break;
+          } else {   
+            currentLine = "";
+          }
+        } else if (c != '\r') {  
+          currentLine += c;    
+        }
+        
+        if (currentLine.endsWith("GET /LED1_ON")) {
+          digitalWrite(LED1, HIGH);            
+        }
+        else if (currentLine.endsWith("GET /LED1_OFF")) {
+          digitalWrite(LED1, LOW);               
+        }
+
+         if (currentLine.endsWith("GET /LED2_ON")) {
+          digitalWrite(LED2, HIGH);              
+        }
+        else if (currentLine.endsWith("GET /LED2_OFF")) {
+          digitalWrite(LED2, LOW);             
+        }
+      }
+    }
+    client.stop();
+    Serial.println("Client Disconnected.");
+  }
+}
+
+void setup()
+{
+    Serial.begin(115200);
+    pinMode(LED1, OUTPUT);
+    pinMode(LED2, OUTPUT);
+    vTaskDelay(1000 /portTICK_PERIOD_MS);
+
+    xTaskCreatePinnedToCore(Connect_WIFI,
+      "Connect To WIFI",
+      1024,
+      NULL,
+      1,
+      NULL,
+      0);
+
+    xTaskCreatePinnedToCore(Control_LED,
+      "Control LED",
+      1024,
+      NULL,
+      1,
+      NULL,
+      1);
+}
+
+void loop(){
+
+}
