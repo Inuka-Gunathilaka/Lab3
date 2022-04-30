@@ -42,7 +42,7 @@ void setup() {
 
   xTaskCreatePinnedToCore(//Tells the scheduler to run the task in one the cores
              startTask2, 
-             "Start Task 1", 
+             "Start Task 2", 
              1024, //Stack Size
              NULL, //Parameter to pass to the function
              1, //Task Priority
