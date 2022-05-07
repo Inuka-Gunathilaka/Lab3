@@ -9,10 +9,6 @@ const char LED2 = 18;
 TaskHandle_t Handle1;
 TaskHandle_t Handle2;
 
-unsigned long currentTime = millis();
-unsigned long previousTime = 0; 
-const long timeoutTime = 2000;
-
 WiFiServer server(80);
 
 void Connect_WIFI(void *parameters){
@@ -30,28 +26,18 @@ void Connect_WIFI(void *parameters){
     Serial.println("WiFi connected.");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
-    server.begin();
     vTaskDelete(Handle1);
 }
 
 
 void Control_LED(void *parameters){
-  if(WiFi.status() == WL_CONNECTED){
-    Serial.println("Still Connected");
-  }else if(WiFi.status() == WL_CONNECTION_LOST){
-    Serial.println("Not CONNECTED");
-  }
-  
+  server.begin();
   WiFiClient client = server.available();   
 
-  if (client) {
-    vTaskResume(Handle2);  
-    currentTime = millis();
-    previousTime = currentTime;                       
+  if (client) {               
     Serial.println("New Client.");           
     String currentLine = "";               
-    while (client.connected() && currentTime - previousTime <= timeoutTime) {          
-      currentTime = millis();
+    while (client.connected()) {          
       if (client.available()) {            
         char c = client.read();            
         Serial.write(c);                   
@@ -95,8 +81,9 @@ void Control_LED(void *parameters){
       }
     }else if(!client){
       Serial.println("No Client");
-      vTaskSuspend(Handle2);
     }
+    client.stop();
+    Serial.println("Client Disconnected");
    
 }
 
@@ -111,7 +98,7 @@ void setup()
   xTaskCreatePinnedToCore(
     Connect_WIFI,
     "Connect to WIFI",
-    2024,
+    1024,
     NULL,
     1,
     &Handle1,
@@ -120,11 +107,12 @@ void setup()
   xTaskCreatePinnedToCore(
     Control_LED,
     "Control LED",
-    2024,
+    1024,
     NULL,
     1,
     &Handle2,
     1);
+
 }
 
 int value = 0;
