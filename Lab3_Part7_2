@@ -26,15 +26,14 @@ void Connect_WIFI(void *parameters){
     Serial.println("WiFi connected.");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+    server.begin();
     vTaskDelete(Handle1);
 }
 
 
 void Control_LED(void *parameters){
-  server.begin();
   WiFiClient client = server.available();   
-
-  if (client) {               
+  if (client) {                
     Serial.println("New Client.");           
     String currentLine = "";               
     while (client.connected()) {          
@@ -82,8 +81,8 @@ void Control_LED(void *parameters){
     }else if(!client){
       Serial.println("No Client");
     }
-    client.stop();
-    Serial.println("Client Disconnected");
+
+    vTaskDelete(Handle2);
    
 }
 
@@ -98,7 +97,7 @@ void setup()
   xTaskCreatePinnedToCore(
     Connect_WIFI,
     "Connect to WIFI",
-    1024,
+    2024,
     NULL,
     1,
     &Handle1,
@@ -107,12 +106,11 @@ void setup()
   xTaskCreatePinnedToCore(
     Control_LED,
     "Control LED",
-    1024,
+    2024,
     NULL,
     1,
     &Handle2,
     1);
-
 }
 
 int value = 0;
@@ -120,3 +118,4 @@ int value = 0;
 void loop(){
   delay(1);
 }
+
